@@ -1,12 +1,22 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
-df = pd.read_excel("sample_data.xlsx")
 
-mili = df["Millisecond"]
+file = "sample_data2.xlsx"
+
+df = pd.read_excel(file)
+
+mili = df["Milliseconds"]
 value = df["Value"]
 
 
-plt.scatter(mili, value, color="orange")
-plt.title("Scatter Plot with Matplotlib")
+plt.plot(mili, value, color="orange")
+# plt.scatter(mili, value, color="black")
+
+plt.xlabel("Milisecond")
+plt.ylabel("Value")
+plt.title("Scatter Plot")
+
+
 plt.show()
