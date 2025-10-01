@@ -4,3 +4,4 @@ import matplotlib.pyplot as plt
 
 df = pd.read_excel('student_data.xlsx')
 
+print(df)
