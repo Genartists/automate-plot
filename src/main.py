@@ -1,30 +1,28 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
+# import pandas as pd
+# import matplotlib.pyplot as plt
+# from gui import MyUI
+# import os
 
-def main():
-    fileName = input("Please input file name to generate plot: ") + '.xlsx'
-    genPlot(fileName)
-
-def genPlot(file):
-
-    df = pd.read_excel(file)
-
-    mili = df["Milliseconds"]
-    value = df["Value"]
+# def main():
+#     name = MyUI.sayHello
+#     fileName = name + ".xlsx"
+#     genPlot(fileName)
 
 
-    plt.plot(mili, value, color="orange")
+# def genPlot(file):
 
-    plt.xlabel("Milisecond")
-    plt.ylabel("Value")
-    plt.title("Laser CNC plot")
+#     df = pd.read_excel(file)
+
+#     mili = df["Milliseconds"]
+#     value = df["Value"]
+
+#     plt.plot(mili, value, color="orange")
+
+#     plt.xlabel("Milisecond")
+#     plt.ylabel("Value")
+#     plt.title("Laser CNC plot")
+
+#     plt.show()
 
 
-    plt.show()
-
-main()
-
-
-
-
+# main()
