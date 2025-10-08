@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
+from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QFileDialog
 from ui_main import Ui_MainWindow
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -15,6 +15,8 @@ class MyUI(QMainWindow):
 
     def genPlot(self):
         # get text from input text object to form file name
+        QFileDialog.selectedFiles()
+
         file = self.ui.inputText.text() + ".xlsx"
 
         if not os.path.exists(file):
@@ -32,15 +34,15 @@ class MyUI(QMainWindow):
                 value = df["Value"]
 
                 plt.plot(mili, value, color="orange")
-
                 plt.xlabel("Milisecond")
                 plt.ylabel("Value")
-                plt.title("Laser CNC plot")
-
+                plt.title("CNC plot")
                 plt.show()
             except Exception as e:
                 self.ui.inputText.setText(f"Error reading file: {str(e)}")
                 print(f"Error: {e}")
+    
+    # def fileUpload(self):
 
 
 if __name__ == "__main__":
