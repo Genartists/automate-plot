@@ -79,15 +79,21 @@ class UI(QMainWindow):
                     df = pd.read_csv(file)
                 elif ".xlsx" in os.path.basename(file):
                     df = pd.read_excel(file)
+                df.columns = df.columns.str.strip()
 
                 mili = df["Milliseconds"]
                 value = df["Value"]
 
+                # print(mili)
+                # print(value)
+                
                 plt.plot(mili, value, label=f"{os.path.basename(file)}")
+                # plt.xticks(np.arange(mili.min(), mili.max()))
+                # plt.yticks(np.arange(value.min(), value.max()))
 
-            plt.xlabel("Milisecond")
-            plt.ylabel("Value")
-            plt.title(f"CNC plot")
+            plt.xlabel("Milliseconds")
+            plt.ylabel("Force (KN)")
+            plt.title(f"Bushing Push in Data")
             plt.legend()
             plt.show()
         except Exception as e:
