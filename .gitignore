@@ -1,0 +1,7 @@
+venv/
+build/
+dist/
+src/__pycache__/
+src/box.ui
+
+*.pyc

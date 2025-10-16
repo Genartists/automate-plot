@@ -15,6 +15,7 @@ from PySide6.QtWidgets import (
     QMenuBar,
     QSizePolicy,
     QSpacerItem,
+    QComboBox,
 )
 
 
@@ -101,13 +102,21 @@ class Ui_MainWindow(object):
         row = QHBoxLayout()
         row.setSpacing(10)
 
-        self.inputText = QLineEdit(self.centralwidget)
-        self.inputText.setObjectName("inputText")
-        self.inputText.setPlaceholderText(
-            "Select an Excel file (.xlsx, .xls) or drop it above…"
-        )
-        self.inputText.setClearButtonEnabled(True)
-        row.addWidget(self.inputText, 1)
+        col = QVBoxLayout()
+        col.setSpacing(20)
+
+        self.columnListX = QComboBox(self.centralwidget)
+        self.columnListX.setObjectName("columnListX")
+        self.columnListX.setPlaceholderText("Select the X-axis column")
+
+        self.columnListY = QComboBox(self.centralwidget)
+        self.columnListY.setObjectName("columnListY")
+        self.columnListY.setPlaceholderText("Select the Y-axis column")
+
+        col.addWidget(self.columnListX, 0)
+        col.addWidget(self.columnListY, 1)
+
+        row.addLayout(col, 1)
 
         self.submitBtn = QPushButton(self.centralwidget)
         self.submitBtn.setObjectName("submitBtn")
@@ -147,5 +156,5 @@ class Ui_MainWindow(object):
         self.heading.setText(
             _t("MainWindow", "Drop an Excel file or browse to auto-generate charts")
         )
-        self.dropHint.setText(_t("MainWindow", "Drag & drop .xlsx / .xls here"))
+        self.dropHint.setText(_t("MainWindow", "Drag & drop .xlsx / .csv here"))
         self.submitBtn.setText(_t("MainWindow", "Browse…"))

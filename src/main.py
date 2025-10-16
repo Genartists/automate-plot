@@ -1,7 +1,8 @@
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox
 from ui_main import Ui_MainWindow
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 import os
 
 
@@ -11,7 +12,7 @@ class UI(QMainWindow):
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.ui.submitBtn.clicked.connect(self.fileUpload)
+        self.ui.submitBtn.clicked.connect(self.fileBrowse)
         self.setAcceptDrops(True)
 
     # enable drag event
@@ -52,42 +53,49 @@ class UI(QMainWindow):
         ]  # search dragged file path
 
         if files:
-            self.ui.inputText.setText(f"File uploaded:\n{files}")
-            self.genPlot(files)
+            # self.ui.inputText.setText(f"File uploaded:\n{files}")
+            self.generatePlot(files)
         self.dragLeaveEvent(event)
 
-    def fileUpload(self):
-        file_path, _ = QFileDialog.getOpenFileNames(
+    def fileBrowse(self):
+        filePath, _ = QFileDialog.getOpenFileNames(
             self,
             "Select a files to upload",
             "",
-            "Excel Files (*.xlsx *.xls);;CSV Files (*.csv);;All Files (*)",
+            "Excel Files (*.xlsx *.xls);;CSV Files (*.csv)",
         )
 
-        if file_path:
-            print("Selected file:", file_path)
-            self.genPlot(file_path)
+        if filePath:
+            print("Selected file:", filePath)
+            self.generatePlot(filePath)
         else:
             print("No file selected")
 
-    def genPlot(self, file_paths):
+    def generatePlot(self, filePaths):
+
         try:
-
-            for file in file_paths:
-
-                df = pd.read_excel(file)
+            for file in filePaths:
+                if ".csv" in os.path.basename(file):
+                    df = pd.read_csv(file)
+                elif ".xlsx" in os.path.basename(file):
+                    df = pd.read_excel(file)
 
                 mili = df["Milliseconds"]
                 value = df["Value"]
 
-                plt.figure()
-                plt.plot(mili, value, color="orange")
-                plt.xlabel("Milisecond")
-                plt.ylabel("Value")
-                plt.title(f"CNC plot - {os.path.basename(file)}")
-                plt.show()
+                plt.plot(mili, value, label=f"{os.path.basename(file)}")
+
+            plt.xlabel("Milisecond")
+            plt.ylabel("Value")
+            plt.title(f"CNC plot")
+            plt.legend()
+            plt.show()
         except Exception as e:
-            self.ui.inputText.setText(f"Error reading file: {str(e)}")
+            QMessageBox.warning(
+                self,
+                "Error",
+                "Wrong file format! Should be .csv or .xlsx",
+            )
             print(f"Error: {e}")
 
 
