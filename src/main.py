@@ -3,8 +3,8 @@ from ui_main import Ui_MainWindow
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import mplcursors
 import os
-
 
 class UI(QMainWindow):
     def __init__(self):
@@ -71,7 +71,7 @@ class UI(QMainWindow):
         else:
             print("No file selected")
 
-    def generatePlot(self, filePaths):
+    def generatePlot(self, filePaths):  
 
         try:
             for file in filePaths:
@@ -83,17 +83,20 @@ class UI(QMainWindow):
 
                 mili = df["Milliseconds"]
                 value = df["Value"]
+                
 
                 # print(mili)
                 # print(value)
                 
                 plt.plot(mili, value, label=f"{os.path.basename(file)}")
-                # plt.xticks(np.arange(mili.min(), mili.max()))
-                # plt.yticks(np.arange(value.min(), value.max()))
-
+            cursor = mplcursors.cursor(highlight=True, hover=True)
+            cursor.connect("add", lambda sel: sel.annotation.get_bbox_patch().set(fc="#253342"))
+            
+            
             plt.xlabel("Milliseconds")
             plt.ylabel("Force (KN)")
             plt.title(f"Bushing Push in Data")
+            plt.grid(True)
             plt.legend()
             plt.show()
         except Exception as e:
@@ -103,6 +106,9 @@ class UI(QMainWindow):
                 "Wrong file format! Should be .csv or .xlsx",
             )
             print(f"Error: {e}")
+    
+   
+
 
 
 if __name__ == "__main__":
