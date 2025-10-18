@@ -2,17 +2,22 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBo
 from ui_main import Ui_MainWindow
 import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
 import mplcursors
 import os
 
+# Set style for plot
+plt.style.use(["science", "notebook", "grid"])
+
+
 class UI(QMainWindow):
+
     def __init__(self):
         super().__init__()
-
-        self.ui = Ui_MainWindow()
+        self.ui = (
+            Ui_MainWindow()
+        )  # set up UI from ui main by making object for mainwindow class
         self.ui.setupUi(self)
-        self.ui.submitBtn.clicked.connect(self.fileBrowse)
+        self.ui.submitBtn.clicked.connect(self.fileBrowse)  # Handle click event Pyside6
         self.setAcceptDrops(True)
 
     # enable drag event
@@ -57,6 +62,7 @@ class UI(QMainWindow):
             self.generatePlot(files)
         self.dragLeaveEvent(event)
 
+    # Choose a file from local system
     def fileBrowse(self):
         filePath, _ = QFileDialog.getOpenFileNames(
             self,
@@ -71,33 +77,50 @@ class UI(QMainWindow):
         else:
             print("No file selected")
 
-    def generatePlot(self, filePaths):  
-
+    def generatePlot(self, filePaths):
         try:
+            # Each file uploaded will be read with pandas
             for file in filePaths:
-                if ".csv" in os.path.basename(file):
+                if file.lower().endswith(".csv"):
                     df = pd.read_csv(file)
-                elif ".xlsx" in os.path.basename(file):
+                elif file.lower().endswith(".xlsx"):
                     df = pd.read_excel(file)
+                else:
+                    continue
+
                 df.columns = df.columns.str.strip()
 
                 mili = df["Milliseconds"]
                 value = df["Value"]
-                
 
-                # print(mili)
-                # print(value)
-                
+                # Create plot with two column inside the files
                 plt.plot(mili, value, label=f"{os.path.basename(file)}")
-            cursor = mplcursors.cursor(highlight=True, hover=True)
-            cursor.connect("add", lambda sel: sel.annotation.get_bbox_patch().set(fc="#253342"))
-            
-            
+
+            # Create annotation and allow on hover effect for graphs
+            cursor = mplcursors.cursor(
+                highlight=True,
+                hover=mplcursors.HoverMode.Transient,
+                # Customize highlight attribute
+                highlight_kwargs=dict(
+                    color="#E7E7E7",
+                    linewidth=2,
+                    alpha=0.5,
+                ),
+            )
+
+            # Customize annotation with connect function
+            @cursor.connect("add")
+            def _(sel):
+                sel.annotation.get_bbox_patch().set(fc="#253342")
+                sel.annotation.set_text(
+                    f"{sel.artist.get_label()}\n{df.columns[1]} = {sel.target[0]:.0f}\nForce (KN) = {sel.target[1]:.2f}"
+                )
+
+            # Show and naming plot
             plt.xlabel("Milliseconds")
             plt.ylabel("Force (KN)")
             plt.title(f"Bushing Push in Data")
-            plt.grid(True)
-            plt.legend()
+            plt.legend().set_draggable(True)
             plt.show()
         except Exception as e:
             QMessageBox.warning(
@@ -106,9 +129,6 @@ class UI(QMainWindow):
                 "Wrong file format! Should be .csv or .xlsx",
             )
             print(f"Error: {e}")
-    
-   
-
 
 
 if __name__ == "__main__":
