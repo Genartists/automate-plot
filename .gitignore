@@ -1,7 +1,21 @@
-venv/
 build/
 dist/
-__pycache__/
-box.ui
+main.spec
+src/box.ui
 
-*.pyc
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual envs
+.venv/
+venv/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
