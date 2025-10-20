@@ -3,10 +3,14 @@ from ui_main import Ui_MainWindow
 import pandas as pd
 import matplotlib.pyplot as plt
 import mplcursors
+from aquarel import load_theme
+import mplcyberpunk
 import os
 
-# Set style for plot
-plt.style.use(["science", "notebook", "grid"])
+
+# theme = load_theme("arctic_dark")
+# theme.apply()
+plt.style.use("cyberpunk")
 
 
 class UI(QMainWindow):
@@ -94,7 +98,7 @@ class UI(QMainWindow):
                 value = df["Value"]
 
                 # Create plot with two column inside the files
-                plt.plot(mili, value, label=f"{os.path.basename(file)}")
+                plt.plot(mili, value, ".-", label=f"{os.path.basename(file)}")
 
             # Create annotation and allow on hover effect for graphs
             cursor = mplcursors.cursor(
@@ -121,6 +125,8 @@ class UI(QMainWindow):
             plt.ylabel("Force (KN)")
             plt.title(f"Bushing Push in Data")
             plt.legend().set_draggable(True)
+            mplcyberpunk.add_glow_effects()
+
             plt.show()
         except Exception as e:
             QMessageBox.warning(
@@ -129,6 +135,8 @@ class UI(QMainWindow):
                 "Wrong file format! Should be .csv or .xlsx",
             )
             print(f"Error: {e}")
+
+            # theme.apply_transforms()
 
 
 if __name__ == "__main__":
